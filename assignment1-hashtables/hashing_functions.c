@@ -8,7 +8,7 @@ Author: David J. Bourke
 
 #define NUM_TEST_KEYS 15
 #define MAX_KEY_LENGTH 16
-#define HASH_TABLE_SIZE_M 17
+#define HASH_TABLE_SIZE_M 19
 
 char hash_table[HASH_TABLE_SIZE_M][MAX_KEY_LENGTH];
 char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH] = {
@@ -30,9 +30,9 @@ int hash_index (const char *key) {
 int hash_offset (const char *key) {
     int offset = 0;
     for (int i = 0; i < strlen(key); i++) {
-        offset += key[i] % 3; 
+        offset += key[i] * 2; 
     }
-    return offset;
+    return offset + 1; // Always an odd number
 }
 
 // probes a hash table for a key, if the key exists, the index is returned,
@@ -70,12 +70,12 @@ int table_probe_dh (const char *key, int table_size) {
         // if an empty bucket is found, insert the key and return the index
         if (!hash_table[index_mod_ts][0]) {
             strcpy(hash_table[index_mod_ts], key);
-            //printf("%d probes before storage\n", i);
+            printf("%d probes before storage\n", i);
             return index_mod_ts;
         }
         // if the key exists in the table already, return the index
         if (!strcmp(key, hash_table[index_mod_ts])) {
-            //printf("%d probes before storage\n", i);
+            printf("%d probes before storage\n", i);
             return index_mod_ts;
         }
     }
