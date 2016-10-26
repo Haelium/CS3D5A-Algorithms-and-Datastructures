@@ -8,7 +8,8 @@ Date submitted: 28th of October 2016
 #include <string.h>
 
 #define MAX_KEY_LENGTH 16
-#define HASH_TABLE_SIZE_M 53
+// HASH_TABLE_SIZE_M must always be a prime to guaruntee 100% coverage
+#define HASH_TABLE_SIZE_M 997
 
 // This is our actual hash table
 char hash_table[HASH_TABLE_SIZE_M][MAX_KEY_LENGTH];
@@ -36,7 +37,7 @@ unsigned hash_offset (const char *key) {
     }
     // Ensure that the offset is never a multiple of the has table size
     if (offset % HASH_TABLE_SIZE_M == 0) {
-        offset = 5; // This just works
+        offset = 3; // Ensures universal coverage
     }
     return offset;
 }

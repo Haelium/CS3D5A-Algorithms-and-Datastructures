@@ -3,15 +3,17 @@ hash_test.c -- Code demonstrating hash tables
 Author: David J. Bourke, Student Number: 12304135
 Date started:   21st of October 2016
 Date submitted: 28th of October 2016
+Dependencies:   hashing_functions.h
 Compile with $ gcc -o hash -std=c99 hashing_function.c
 */
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 
 #include "hashing_functions.h"
 
-#define NUM_TEST_KEYS 40
+#define NUM_TEST_KEYS 997
 char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH];
 
 // generates a random string (used for testing)
@@ -38,6 +40,8 @@ int main (void) {
         rand_string(test_strings[s], MAX_KEY_LENGTH);
     }
     int total_collisions = 0;
+
+
     /* Testing the linear probing method */
     // Initialise all elements of hash_table to 0
     memcpy(hash_table, "", HASH_TABLE_SIZE_M * MAX_KEY_LENGTH);
@@ -49,6 +53,7 @@ int main (void) {
 	}
     printf("Total number of collisions:\t %d\n", total_collisions);
     printf("Average number of collisions:\t %lf\n", total_collisions / (double)NUM_TEST_KEYS);
+
 
     /* Testing the double hashing method */
     total_collisions = 0;   // Reset collision counter 
@@ -62,10 +67,6 @@ int main (void) {
 	}
     printf("Total number of collisions:\t %d\n", total_collisions);
     printf("Average number of collisions:\t %lf\n", total_collisions / (double)NUM_TEST_KEYS);
-
-	//
-	// calculate table load here
-	//
 
 	return 0;
 }
