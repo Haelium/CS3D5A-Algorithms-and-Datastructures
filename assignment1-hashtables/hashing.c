@@ -3,6 +3,7 @@ hashing.c -- Code demonstrating hash tables
 Author: David J. Bourke, Student Number: 12304135
 Date started:   21st of October 2016
 Date submitted: 28th of October 2016
+Dependencies:   hashing_functions.h
 Compile with $ gcc -o hash -std=c99 hashing_function.c
 */
 
@@ -16,16 +17,16 @@ Compile with $ gcc -o hash -std=c99 hashing_function.c
 // HASH_TABLE_SIZE_M must always be a prime for 100% coverage
 #define HASH_TABLE_SIZE_M 997
 
-// Hash table
-char hash_table[HASH_TABLE_SIZE_M][MAX_KEY_LENGTH];
-// Test strings
-char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH];
-
 // wrapper for index and # of collisions returned from probing functions
 typedef struct probe_info {
     int index;
     int collisions;
 } probe_info;
+
+// Hash table
+char hash_table[HASH_TABLE_SIZE_M][MAX_KEY_LENGTH];
+// Test strings
+char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH];
 
 // Returns a pseudorandom index position based on an input string
 unsigned hash_index (const char *key) {
