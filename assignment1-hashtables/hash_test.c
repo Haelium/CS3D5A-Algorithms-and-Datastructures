@@ -12,23 +12,31 @@ Compile with $ gcc -o hash -std=c99 hashing_function.c
 #include "hashing_functions.h"
 
 #define NUM_TEST_KEYS 40
+char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH];
 
 // generates a random string (used for testing)
 void rand_string(char* dest_string, int str_len) {
     int rand_len;
+    int min_len = 3;
     int min_char = 32, max_char = 126;  // Range of printable ASCII characters
-    srand((int) time(NULL));
-    rand_len = rand() % str_len;    // Generate random string length
+    // Generate random string length
+    rand_len = rand() % (str_len + 1 - min_len) + min_len;
     for (int c = 0; c < rand_len; c++) {
         // Generate random character in range of printable ASCII characters
         dest_string[c] = (char) (rand() % (max_char + 1 - min_char) + min_char);
     }
-    dest_string[rand_len] = '\0';   // Append null terminator
+    dest_string[rand_len - 1] = '\0';   // Append null terminator
     return;
 }
 
 int main (void) {
+    // seed PRNG
+    srand((int) time(NULL));
     probe_info temp_probe_info;
+    // Initialise test_keys with random data
+    for (int s = 0; s < NUM_TEST_KEYS; s++) {
+        rand_string(test_strings[s], MAX_KEY_LENGTH);
+    }
     int total_collisions = 0;
     /* Testing the linear probing method */
     // Initialise all elements of hash_table to 0
