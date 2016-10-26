@@ -32,6 +32,7 @@ void rand_string(char* dest_string, int str_len) {
 }
 
 int main (void) {
+    int total_collisions;
     // seed PRNG
     srand((int) time(NULL));
     probe_info temp_probe_info;
@@ -39,10 +40,10 @@ int main (void) {
     for (int s = 0; s < NUM_TEST_KEYS; s++) {
         rand_string(test_strings[s], MAX_KEY_LENGTH);
     }
-    int total_collisions = 0;
 
 
     /* Testing the linear probing method */
+    total_collisions = 0;
     // Initialise all elements of hash_table to 0
     memcpy(hash_table, "", HASH_TABLE_SIZE_M * MAX_KEY_LENGTH);
     printf("Probing hash table for every test string using linear probing...\n");
