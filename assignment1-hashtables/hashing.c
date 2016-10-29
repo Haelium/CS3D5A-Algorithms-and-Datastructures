@@ -1,10 +1,12 @@
 /*
-hashing.c -- Code demonstrating hash tables
+hashing.c -- Code demonstrating hash tables & measuring collision rates
 Author: David J. Bourke, Student Number: 12304135
 Date started:   21st of October 2016
-Date submitted: 28th of October 2016
+Date submitted: 30th of October 2016
 Dependencies:   hashing_functions.h
 Compile with $ gcc hashing.c -o3 -std=c99 -o hash
+The hash table is stored in a global char array declared on line 28
+The insertion & searching the hash table can be performed using the probe_table functions
 */
 
 #include <string.h>
@@ -24,9 +26,7 @@ typedef struct probe_info {
     int collisions;
 } probe_info;
 
-// Hash table
 char hash_table[HASH_TABLE_SIZE_M][MAX_KEY_LENGTH];
-// Test strings
 char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH];
 
 // Returns a pseudorandom index position based on an input string
@@ -146,8 +146,9 @@ static inline void rand_string (char* dest_string, int str_len) {
     return;
 }
 
-// Returns the average collision rate for a given
-static inline double collision_test (int filled_buckets, int num_of_trials, int double_hash) {
+// Returns the average collision rate, takes a number of trials as input
+// "double_hash" argument tells the function whether or not to use double hashing
+static inline double collision_test (int num_of_trials, int double_hash) {
     int total_collisions;
     double average_collisions;
     probe_info temp_probe_info;
@@ -176,8 +177,9 @@ int main (void) {
     double average_collision_results_dh[HASH_TABLE_SIZE_M];
     char random_string[MAX_KEY_LENGTH];
     srand((int) clock());
-    FILE* p_graph_data = fopen("results.csv", "w");
+    FILE* p_graph_data = NULL;
 
+    p_graph_data = fopen("lp_results.csv", "w");
     // Graph labels
     fprintf(p_graph_data,"\nFilled Buckets,Number of Collisions\n");
     // Initialise hash_table buckets to 0
@@ -187,10 +189,12 @@ int main (void) {
         rand_string(random_string, MAX_KEY_LENGTH);
         table_probe_lp(random_string, HASH_TABLE_SIZE_M, 1);
         // Clear hash table before each test1
-        average_collision_results_lp[i] = collision_test(i, 100, 0);
+        average_collision_results_lp[i] = collision_test(100, 0);
         fprintf(p_graph_data, "%d,%lf\n", i, average_collision_results_lp[i]);
     }
+    fclose(p_graph_data);
 
+    p_graph_data = fopen("dh_results.csv", "w");
     // Graph labels
     fprintf(p_graph_data,"\nFilled Buckets,Number of Collisions\n");
     // Initialise hash_table buckets to 0
@@ -200,9 +204,10 @@ int main (void) {
         rand_string(random_string, MAX_KEY_LENGTH);
         table_probe_dh(random_string, HASH_TABLE_SIZE_M, 1);
         // Clear hash table before each test1
-        average_collision_results_dh[i] = collision_test(i, 100, 1);
+        average_collision_results_dh[i] = collision_test(100, 1);
         fprintf(p_graph_data, "%d,%lf\n", i, average_collision_results_dh[i]);
     }
+    fclose(p_graph_data);
 
 	return 0;
 }
