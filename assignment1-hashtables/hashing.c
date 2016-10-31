@@ -5,8 +5,9 @@ Date started:   21st of October 2016
 Date submitted: 30th of October 2016
 Dependencies:   hashing_functions.h
 Compile with $ gcc hashing.c -o3 -std=c99 -o hash
-The hash table is stored in a global char array declared on line 28
+The hash table is stored in a global char array declared on line 30
 The insertion & searching the hash table can be performed using the probe_table functions
+This code runs to completion within 40 seconds on an i7-4710MQ
 */
 
 #include <string.h>
@@ -33,7 +34,7 @@ char test_strings[NUM_TEST_KEYS][MAX_KEY_LENGTH];
 static inline unsigned hash_index (const char *key, int table_size) {
     unsigned index = 0;
 	for (int i = 0; i < strlen(key); i++) {
-        index += key[i] * i;
+        index += key[i] * (i + 1);
 	}
     // Comparison + misbranch is less expensive than modulo
     if (index >= table_size) {
@@ -105,7 +106,7 @@ static inline probe_info table_probe_dh (const char *key, int table_size, int in
     for (i = 0; i < table_size; i++) {
         // h(k,i) = (f(k) + i * g(k))
         index_mod_ts = (index + i * hash_off);
-        if (index_mod_ts >= table_size) {
+        if (index_mod_ts >= table_size) {   // Comparison is cheaper than modulo
             index_mod_ts %= table_size;
         }
         // if an empty bucket is found, insert the key and return the index
@@ -179,9 +180,8 @@ int main (void) {
     srand((int) clock());
     FILE* p_graph_data = NULL;
 
+    printf("Testing linear probing collision rate...\n");
     p_graph_data = fopen("lp_results.csv", "w");
-    // Graph labels
-    fprintf(p_graph_data,"\nFilled Buckets,Number of Collisions\n");
     // Initialise hash_table buckets to 0
     memcpy(hash_table, "", HASH_TABLE_SIZE_M * MAX_KEY_LENGTH);
     for (int i = 0; i < HASH_TABLE_SIZE_M; i++) {
@@ -193,10 +193,10 @@ int main (void) {
         fprintf(p_graph_data, "%d,%lf\n", i, average_collision_results_lp[i]);
     }
     fclose(p_graph_data);
+    printf("Linear probing results stored in lp_results.csv\n");
 
+    printf("Testing double hashing collision rate...\n");
     p_graph_data = fopen("dh_results.csv", "w");
-    // Graph labels
-    fprintf(p_graph_data,"\nFilled Buckets,Number of Collisions\n");
     // Initialise hash_table buckets to 0
     memcpy(hash_table, "", HASH_TABLE_SIZE_M * MAX_KEY_LENGTH);
     for (int i = 0; i < HASH_TABLE_SIZE_M; i++) {
@@ -208,6 +208,7 @@ int main (void) {
         fprintf(p_graph_data, "%d,%lf\n", i, average_collision_results_dh[i]);
     }
     fclose(p_graph_data);
+    printf("Double hashing results stored in dh_results.csv\n");
 
 	return 0;
 }
