@@ -16,5 +16,5 @@ int main (void) {
     }
     printf("\n");
 
-    heapify(test_array);
+    heapsort(test_array);
 }
