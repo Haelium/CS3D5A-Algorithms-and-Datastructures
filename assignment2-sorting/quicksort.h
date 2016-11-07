@@ -1,4 +1,4 @@
-int partition (int* array, int lo, int hi) {
+static inline int partition (int* array, int lo, int hi) {
     // Start at last element
     int pivot = array[lo];
     int i = lo - 1;
@@ -6,12 +6,10 @@ int partition (int* array, int lo, int hi) {
     int swap;
     while (1) {
         do {
-        //while (array[i] < pivot) {
             i = i + 1;
         } while (array[i] < pivot);
         
         do {
-        //while (array[j] > pivot) {
             j = j - 1;
         } while (array[j] > pivot);
 
