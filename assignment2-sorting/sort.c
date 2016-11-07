@@ -15,4 +15,6 @@ int main (void) {
         printf("%d-", test_array[x]);
     }
     printf("\n");
+
+    heapify(test_array);
 }
