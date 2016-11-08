@@ -2,7 +2,7 @@
 hashing.c -- Code demonstrating hash tables & measuring collision rates
 Author: David J. Bourke, Student Number: 12304135
 Date started:   21st of October 2016
-Date submitted: 30th of October 2016
+Date submitted: 31st of October 2016
 Dependencies:   hashing_functions.h
 Compile with $ gcc hashing.c -o3 -std=c99 -o hash
 The hash table is stored in a global char array declared on line 30
@@ -62,8 +62,8 @@ static inline unsigned hash_offset (const char *key, int table_size) {
 // Colisions with existing keys are dealt with using linear probing
 static inline probe_info table_probe_lp (const char *key, int table_size, int insert) {
     probe_info lp_probe_info;
-    int index = hash_index(key, table_size);
-    int index_mod_ts; // allows for "wrapping" where (index > table_size)
+    unsigned index = hash_index(key, table_size);
+    unsigned index_mod_ts; // allows for "wrapping" where (index > table_size)
     int i;  // We need i after loop for case where no empty bucket is found
     for (i = 0; i < table_size; i++) {
         index_mod_ts = index + i;
@@ -99,9 +99,9 @@ static inline probe_info table_probe_lp (const char *key, int table_size, int in
 // Colissions withexisting keys are dealt with using double hashing
 static inline probe_info table_probe_dh (const char *key, int table_size, int insert) {
     probe_info dh_probe_info;
-    int index = hash_index(key, table_size);
-    int hash_off = hash_offset(key, table_size);
-    int index_mod_ts; // allows for "wrapping" where (index > table_size)
+    unsigned index = hash_index(key, table_size);
+    unsigned hash_off = hash_offset(key, table_size);
+    unsigned index_mod_ts; // allows for "wrapping" where (index > table_size)
     int i;  // We need i after loop for case where no empty bucket is found
     for (i = 0; i < table_size; i++) {
         // h(k,i) = (f(k) + i * g(k))
@@ -188,8 +188,8 @@ int main (void) {
         // Add entry to hash_table (increase bucket size for next test)
         rand_string(random_string, MAX_KEY_LENGTH);
         table_probe_lp(random_string, HASH_TABLE_SIZE_M, 1);
-        // Clear hash table before each test1
-        average_collision_results_lp[i] = collision_test(100, 0);
+        // Clear hash table before each test
+        average_collision_results_lp[i] = collision_test(10, 0);
         fprintf(p_graph_data, "%d,%lf\n", i, average_collision_results_lp[i]);
     }
     fclose(p_graph_data);
@@ -203,8 +203,8 @@ int main (void) {
         // Add entry to hash table (increase bucket size for next test)
         rand_string(random_string, MAX_KEY_LENGTH);
         table_probe_dh(random_string, HASH_TABLE_SIZE_M, 1);
-        // Clear hash table before each test1
-        average_collision_results_dh[i] = collision_test(100, 1);
+        // Clear hash table before each test
+        average_collision_results_dh[i] = collision_test(10, 1);
         fprintf(p_graph_data, "%d,%lf\n", i, average_collision_results_dh[i]);
     }
     fclose(p_graph_data);
