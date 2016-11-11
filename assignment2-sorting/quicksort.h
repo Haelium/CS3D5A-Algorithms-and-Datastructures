@@ -1,8 +1,8 @@
 static inline int partition (int* array, int lo, int hi) {
     // Start at last element
     int pivot = array[lo];
-    int i = lo - 1;
-    int j = hi + 1;
+    int i = lo - 1; // iterator starting at l0
+    int j = hi + 1; // decrementer starting at hi
     int swap;
     while (1) {
         do {
