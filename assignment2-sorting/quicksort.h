@@ -1,7 +1,9 @@
+static int num_of_probes;
+
 static inline int partition (int* array, int lo, int hi) {
     // Start at last element
     int pivot = array[lo];
-    int i = lo - 1; // iterator starting at l0
+    int i = lo - 1; // iterator starting at lo
     int j = hi + 1; // decrementer starting at hi
     int swap;
     while (1) {
@@ -16,6 +18,8 @@ static inline int partition (int* array, int lo, int hi) {
         if (i >= j) {
             return j;
         }
+        
+        num_of_probes++; // counting probes, not strictly part of quicksort algorithm
 
         swap = array[i];
         array[i] = array[j];
@@ -24,11 +28,18 @@ static inline int partition (int* array, int lo, int hi) {
 }
 
 // If hi is greater than the length of the array, things will break
-void quicksort (int* array, int lo, int hi) {
+static void private_quicksort (int* array, int lo, int hi) {
     int p;
     if (lo < hi) {
         p = partition(array, lo, hi);
-        quicksort(array, lo, p);
-        quicksort(array, p + 1, hi);
+        private_quicksort(array, lo, p);
+        private_quicksort(array, p + 1, hi);
     }
+}
+
+// Wrapper function, returns number of probes and provides cleaner interface
+int quicksort (int* array, int array_length) {
+    num_of_probes = 0;
+    private_quicksort(array, 0, array_length - 1);
+    return num_of_probes;
 }
