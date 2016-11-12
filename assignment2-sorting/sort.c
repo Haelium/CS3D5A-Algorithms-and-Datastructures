@@ -1,3 +1,12 @@
+/*
+sort.c, code demonstrating and quicksort & heapsort for the purpose of comparison
+Author: David J. Bourke, Student Number: 12304135
+Date started:   4th of October 2016
+Date submitted: pending
+Dependencies:   heapsort.h, quicksort.h
+Compile with $ gcc sort.c -std=c99 -o sort
+*/
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -77,7 +86,7 @@ static inline void fprintArrayCSV_int (int* array, int array_length, char* filen
 }
 
 int main (void) {
-    int max_array_size = 5000;
+    int max_array_size = 50000;
     int* test_array = (int*)malloc(max_array_size * sizeof(int));
     double clocks_to_sort_QS[max_array_size];
     double clocks_to_sort_HS[max_array_size];
@@ -87,14 +96,12 @@ int main (void) {
     
     for (int i = 1; i <= max_array_size; i++) {
         randomiseArray(test_array, i - 1);  // Randomise test data up to i
-        //time_to_sort_QS[i - 1] = testSortTime(test_array, i, QUICKSORT_CODE);
         test_metrics = testSortTime(test_array, i, QUICKSORT_CODE);
         if (test_metrics.sorted == false) { printf("quicksort failed\n"); }
         clocks_to_sort_QS[i - 1] = test_metrics.clock_ticks;
         probes_to_sort_QS[i - 1] = test_metrics.probes;
 
         randomiseArray(test_array, i - 1);  // Randomise test data up to i
-        //time_to_sort_HS[i - 1] = testSortTime(test_array, i, HEAPSORT_CODE);
         test_metrics = testSortTime(test_array, i, HEAPSORT_CODE);
         if (test_metrics.sorted == false) { printf("Heapsort failed\n"); }
         clocks_to_sort_HS[i - 1] = test_metrics.clock_ticks;
@@ -104,10 +111,4 @@ int main (void) {
     fprintArrayCSV_double(clocks_to_sort_HS, max_array_size, "./heapsort_clock_results.csv");
     fprintArrayCSV_int(probes_to_sort_QS, max_array_size, "./quicksort_probe_results.csv");
     fprintArrayCSV_int(probes_to_sort_HS, max_array_size, "./heapsort_probe_results.csv");
-    /*int mr_test[] = {7, 2, 9, 3, 4, 1, 5, 8, 6, 0};
-    printf("Num of probes to sort: %d\n", quicksort(mr_test, 10));
-    for (int i = 0; i < 10; i++) {
-        printf("%d-", mr_test[i]);
-    }
-    printf("\n");*/
 }

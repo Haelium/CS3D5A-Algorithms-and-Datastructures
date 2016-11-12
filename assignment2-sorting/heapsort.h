@@ -5,6 +5,8 @@
 #define LChild(i)   2 * i + 1
 #define RChild(i)   2 * i + 2
 
+// Each comparison of any element of the array shall be refered to as a "probe"
+// This "probecounting" is not part of the heapsort algorithm
 static int num_of_probes;
 
 static inline void swap_int (int* x, int* y) {
@@ -18,11 +20,15 @@ static void maxHeapify (int* array, int heap_size, int i) {
     int largest = 0;
     int l = LChild(i);
     int r = RChild(i);
+
+    num_of_probes++;    // array[l] compared with array[i]
     if (l <= (heap_size - 1) && array[l] > array[i]) {
         largest = l;
     } else {
         largest = i;
     }
+
+    num_of_probes++;    // array[r] sompared with array[largest]
     if (r <= (heap_size - 1) && array[r] > array[largest]) {
         largest = r;
     }
@@ -30,7 +36,6 @@ static void maxHeapify (int* array, int heap_size, int i) {
         swap_int(&array[i], &array[largest]);
         maxHeapify(array, heap_size, largest);
     }
-    num_of_probes++;
 }
 
 // Algorithm taken from pg. 157 of CLRS
