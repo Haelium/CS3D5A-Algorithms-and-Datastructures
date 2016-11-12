@@ -5,23 +5,23 @@
 #define LChild(i)   2 * i + 1
 #define RChild(i)   2 * i + 2
 
-static inline void swap_int(int* x, int* y) {
+static inline void swap_int (int* x, int* y) {
     int swap = *x;
     *x = *y;
     *y = swap;
 }
 
 // Algorithm taken from pg. 154 of CLRS
-void maxHeapify (int* array, int heap_size, int i) {
-    int largest;
+static void maxHeapify (int* array, int heap_size, int i) {
+    int largest = 0;
     int l = LChild(i);
     int r = RChild(i);
-    if (l < heap_size && array[l] > array[i]) {
+    if (l <= (heap_size - 1) && array[l] > array[i]) {
         largest = l;
     } else {
         largest = i;
     }
-    if (r < heap_size && array[r] > array[largest]) {
+    if (r <= (heap_size - 1) && array[r] > array[largest]) {
         largest = r;
     }
     if (largest != i) {
@@ -30,20 +30,17 @@ void maxHeapify (int* array, int heap_size, int i) {
     }
 }
 
-
 // Algorithm taken from pg. 157 of CLRS
-void buildMaxHeap (int* array, int array_length) {
-    int heap_size = array_length - 1;
-    for (int i = array_length / 2 - 1; i >= 0; i--) {
+static inline void buildMaxHeap (int* array, int heap_size) {
+    for (int i = heap_size / 2 - 1; i >= 0; i--) {
         maxHeapify(array, heap_size, i);
     }
 }
 
 // Algorithm taken from pg. 160 of CLRS
-void heapsort (int* array, int array_length) {
-    int heap_size = array_length - 1;
-    buildMaxHeap(array, array_length);
-    for (int i = heap_size; i >= 1; i--) {
+void heapsort (int* array, int heap_size) {
+    buildMaxHeap(array, heap_size);
+    for (int i = heap_size - 1; i > 0; i--) {
         swap_int(&array[0], &array[i]);
         maxHeapify(array, --heap_size, 0);
     }
