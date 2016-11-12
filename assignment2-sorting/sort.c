@@ -60,13 +60,12 @@ void fprintArrayCSV (double* array, int array_length, char* filename) {
 }
 
 int main (void) {
-    int max_array_size = 8000;
+    int max_array_size = 5000;
     int* test_array = (int*)malloc(max_array_size * sizeof(int));
     double time_to_sort_QS[max_array_size];
     double time_to_sort_HS[max_array_size];
     
     for (int i = 1; i <= max_array_size; i++) {
-
         randomiseArray(test_array, i - 1);  // Randomise test data up to i
         time_to_sort_QS[i - 1] = testSortTime(test_array, i, QUICKSORT_CODE);
 
