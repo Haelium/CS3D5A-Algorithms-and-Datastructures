@@ -86,7 +86,7 @@ static inline void fprintArrayCSV_int (int* array, int array_length, char* filen
 }
 
 int main (void) {
-    int max_array_size = 50000;
+    int max_array_size = 2500;
     int* test_array = (int*)malloc(max_array_size * sizeof(int));
     double clocks_to_sort_QS[max_array_size];
     double clocks_to_sort_HS[max_array_size];
