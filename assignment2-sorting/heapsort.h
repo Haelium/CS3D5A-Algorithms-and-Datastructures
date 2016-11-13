@@ -47,7 +47,7 @@ static inline void buildMaxHeap (int* array, int heap_size) {
 
 // Algorithm taken from pg. 160 of CLRS
 int heapsort (int* array, int heap_size) {
-    num_of_probes = 0;
+    num_of_probes = 0;  // reset probe counter
     buildMaxHeap(array, heap_size);
     for (int i = heap_size - 1; i > 0; i--) {
         swap_int(&array[0], &array[i]);
