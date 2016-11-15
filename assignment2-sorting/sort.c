@@ -1,8 +1,8 @@
 /*
 sort.c, code demonstrating and quicksort & heapsort for the purpose of comparison
 Author: David J. Bourke, Student Number: 12304135
-Date started:   4th of October 2016
-Date submitted: pending
+Date started:   4th of November 2016
+Date submitted: 15th of November 2016
 Dependencies:   heapsort.h, quicksort.h
 Compile with $ gcc sort.c -std=c99 -o sort
 */
@@ -26,13 +26,13 @@ typedef struct sort_metrics {
 } sort_metrics;
 
 // Tests if an array is sorted (increasing values), 
-// returns 1 if test is failed, returns 0 if the array is sorted
+// returns true if array is sorted, returns false if the array is unsorted
 static inline bool isSorted (int* array, int array_length) {
     int failtest = 0;
     for (int i = 1; i < array_length; i++) {
         // If the ith value is less than its preceding value, array is unsorted
         if (array[i] < array[i - 1]) {
-            return false;   // Return 1 if unsorted
+            return false;   // Return false if any two adjacant indexes out of order
         }
     }
     return true;
@@ -86,7 +86,7 @@ static inline void fprintArrayCSV_int (int* array, int array_length, char* filen
 }
 
 int main (void) {
-    int max_array_size = 2500;
+    int max_array_size = 5000;
     int* test_array = (int*)malloc(max_array_size * sizeof(int));
     double clocks_to_sort_QS[max_array_size];
     double clocks_to_sort_HS[max_array_size];
@@ -95,18 +95,19 @@ int main (void) {
     sort_metrics test_metrics;
     
     for (int i = 1; i <= max_array_size; i++) {
-        randomiseArray(test_array, i - 1);  // Randomise test data up to i
+        randomiseArray(test_array, i - 1);  // Randomise test data array up to index i - 1
         test_metrics = testSortTime(test_array, i, QUICKSORT_CODE);
         if (test_metrics.sorted == false) { printf("quicksort failed\n"); }
         clocks_to_sort_QS[i - 1] = test_metrics.clock_ticks;
         probes_to_sort_QS[i - 1] = test_metrics.probes;
 
-        randomiseArray(test_array, i - 1);  // Randomise test data up to i
+        randomiseArray(test_array, i - 1);  // Randomise test data array up to index i - 1
         test_metrics = testSortTime(test_array, i, HEAPSORT_CODE);
         if (test_metrics.sorted == false) { printf("Heapsort failed\n"); }
         clocks_to_sort_HS[i - 1] = test_metrics.clock_ticks;
         probes_to_sort_HS[i - 1] = test_metrics.probes;
     }
+    // Write test results to csv files
     fprintArrayCSV_double(clocks_to_sort_QS, max_array_size, "./quicksort_clock_results.csv");
     fprintArrayCSV_double(clocks_to_sort_HS, max_array_size, "./heapsort_clock_results.csv");
     fprintArrayCSV_int(probes_to_sort_QS, max_array_size, "./quicksort_probe_results.csv");

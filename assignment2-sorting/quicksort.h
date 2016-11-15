@@ -24,6 +24,7 @@ static inline int partition (int* array, int lo, int hi) {
             return j;
         }
         
+        // Exchange array[i] with array[j]
         swap = array[i];
         array[i] = array[j];
         array[j] = swap;

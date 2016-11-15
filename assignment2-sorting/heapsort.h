@@ -16,24 +16,24 @@ static inline void swap_int (int* x, int* y) {
 }
 
 // Algorithm taken from pg. 154 of CLRS
-static void maxHeapify (int* array, int heap_size, int i) {
+static void maxHeapify (int* array, int heap_size, int parent) {
     int largest = 0;
-    int l = LChild(i);
-    int r = RChild(i);
+    int left_child = LChild(parent);
+    int right_child = RChild(parent);
 
     num_of_probes++;    // array[l] compared with array[i]
-    if (l <= (heap_size - 1) && array[l] > array[i]) {
-        largest = l;
+    if (left_child <= (heap_size - 1) && array[left_child] > array[parent]) {
+        largest = left_child;
     } else {
-        largest = i;
+        largest = parent;
     }
 
     num_of_probes++;    // array[r] sompared with array[largest]
-    if (r <= (heap_size - 1) && array[r] > array[largest]) {
-        largest = r;
+    if (right_child <= (heap_size - 1) && array[right_child] > array[largest]) {
+        largest = right_child;
     }
-    if (largest != i) {
-        swap_int(&array[i], &array[largest]);
+    if (largest != parent) {
+        swap_int(&array[parent], &array[largest]);
         maxHeapify(array, heap_size, largest);
     }
 }
