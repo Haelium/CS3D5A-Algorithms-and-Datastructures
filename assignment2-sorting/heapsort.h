@@ -23,6 +23,7 @@ static void maxHeapify (int* array, int heap_size, int parent) {
     int right_child = RChild(parent);
 
     num_of_probes++;    // array[l] compared with array[i]
+    // If the value of the left child is greater than the parent, assign left_child as largest
     if (left_child < (heap_size) && array[left_child] > array[parent]) {
         largest = left_child;
     } else {
@@ -30,6 +31,7 @@ static void maxHeapify (int* array, int heap_size, int parent) {
     }
 
     num_of_probes++;    // array[r] sompared with array[largest]
+    // If the right child is larger than the left child or the parent, assign right_child as largest
     if (right_child < (heap_size) && array[right_child] > array[largest]) {
         largest = right_child;
     }
@@ -42,6 +44,7 @@ static void maxHeapify (int* array, int heap_size, int parent) {
 
 // Algorithm taken from pg. 157 of CLRS
 static inline void buildMaxHeap (int* array, int heap_size) {
+    // Start loop from the second to last row and work backwards to the root, max-heapifying each element
     for (int i = heap_size / 2 - 1; i >= 0; i--) {
         maxHeapify(array, heap_size, i);
     }
