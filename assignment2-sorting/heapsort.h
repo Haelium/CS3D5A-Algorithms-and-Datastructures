@@ -16,22 +16,24 @@ static inline void swap_int (int* x, int* y) {
 }
 
 // Algorithm taken from pg. 154 of CLRS
+// Exchanges the value of parent with the largest child if the largest child's value is greater than parent
 static void maxHeapify (int* array, int heap_size, int parent) {
     int largest = 0;
     int left_child = LChild(parent);
     int right_child = RChild(parent);
 
     num_of_probes++;    // array[l] compared with array[i]
-    if (left_child <= (heap_size - 1) && array[left_child] > array[parent]) {
+    if (left_child < (heap_size) && array[left_child] > array[parent]) {
         largest = left_child;
     } else {
         largest = parent;
     }
 
     num_of_probes++;    // array[r] sompared with array[largest]
-    if (right_child <= (heap_size - 1) && array[right_child] > array[largest]) {
+    if (right_child < (heap_size) && array[right_child] > array[largest]) {
         largest = right_child;
     }
+    // If a child is larger than the parent, exchange values and heapify the new child
     if (largest != parent) {
         swap_int(&array[parent], &array[largest]);
         maxHeapify(array, heap_size, largest);
@@ -50,7 +52,9 @@ int heapsort (int* array, int heap_size) {
     num_of_probes = 0;  // reset probe counter
     buildMaxHeap(array, heap_size);
     for (int i = heap_size - 1; i > 0; i--) {
+        // Exchange root of the heap with the last element
         swap_int(&array[0], &array[i]);
+        // Call maxHeapify again, reducing the size of the heap to exclude the previous root which was replaced with i
         maxHeapify(array, --heap_size, 0);
     }
     return num_of_probes;

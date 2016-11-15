@@ -31,7 +31,8 @@ static inline int partition (int* array, int lo, int hi) {
     }
 }
 
-// If hi is greater than the length of the array, things will break
+// Sorts elements of array. 
+// lo is the lowest index to be sorted, hi is highest index to be sorted.
 static void private_quicksort (int* array, int lo, int hi) {
     int p;
     if (lo < hi) {
