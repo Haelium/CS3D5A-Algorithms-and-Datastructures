@@ -1,3 +1,11 @@
+/*
+heapsort.h, code implementing heapsort for integer arrays
+Author: David J. Bourke, Student Number: 12304135
+Date started:   4th of November 2016
+Date submitted: 15th of November 2016
+Used in: sort.c
+*/
+
 #include <stdlib.h>
 
 // Heap associations for 0 indexed array

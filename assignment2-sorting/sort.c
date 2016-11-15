@@ -42,6 +42,7 @@ static inline bool isSorted (int* array, int array_length) {
 // returns runtime of sorting function with test_array and array_length passed as arguments
 // returns -1 if  array (up to the length specified) is not sorted correctly
 static inline sort_metrics testSortTime (int* test_array, int array_length, int sort_function) {
+     // Struct to record runtime in probes and clock tics, also a bool to identify if the array is correctly sorted
     sort_metrics test_metrics;
     clock_t t_start;
 
@@ -54,7 +55,6 @@ static inline sort_metrics testSortTime (int* test_array, int array_length, int 
         test_metrics.probes = quicksort(test_array, array_length);
         test_metrics.clock_ticks = clock() - t_start;
     }
-
     // check if array is sorted (up to the length specified in array_length)
     test_metrics.sorted = isSorted(test_array, array_length);
     return test_metrics;
@@ -62,6 +62,7 @@ static inline sort_metrics testSortTime (int* test_array, int array_length, int 
 
 static inline void randomiseArray (int* array, int array_length) {
     srand(time(NULL));  // Seed prng for test_array random ints
+    // Loop through array, assigning random ints to each element
     for (int i = 0; i < array_length; i++) {
         array[i] = rand();
     }
@@ -98,14 +99,14 @@ int main (void) {
         randomiseArray(test_array, i - 1);  // Randomise test data array up to index i - 1
         test_metrics = testSortTime(test_array, i, QUICKSORT_CODE);
         if (test_metrics.sorted == false) { printf("quicksort failed\n"); }
-        clocks_to_sort_QS[i - 1] = test_metrics.clock_ticks;
-        probes_to_sort_QS[i - 1] = test_metrics.probes;
+        clocks_to_sort_QS[i - 1] = test_metrics.clock_ticks;    // Record clock tics taken to sort i ints
+        probes_to_sort_QS[i - 1] = test_metrics.probes;         // Record probes taken to sort i ints
 
         randomiseArray(test_array, i - 1);  // Randomise test data array up to index i - 1
         test_metrics = testSortTime(test_array, i, HEAPSORT_CODE);
         if (test_metrics.sorted == false) { printf("Heapsort failed\n"); }
-        clocks_to_sort_HS[i - 1] = test_metrics.clock_ticks;
-        probes_to_sort_HS[i - 1] = test_metrics.probes;
+        clocks_to_sort_HS[i - 1] = test_metrics.clock_ticks;   // Record clock tics take to sort i ints
+        probes_to_sort_HS[i - 1] = test_metrics.probes;        // Record probes taken to sort i ints
     }
     // Write test results to csv files
     fprintArrayCSV_double(clocks_to_sort_QS, max_array_size, "./quicksort_clock_results.csv");

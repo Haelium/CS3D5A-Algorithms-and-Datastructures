@@ -1,3 +1,11 @@
+/*
+quicksort.h, code implementing quicksort for integer arrays
+Author: David J. Bourke, Student Number: 12304135
+Date started:   4th of November 2016
+Date submitted: 15th of November 2016
+Used in: sort.c
+*/
+
 // Each comparison of any two element of the array shall be refered to as a "probe"
 // This "probecounting" is not part of the quicksort algorithm
 static int num_of_probes;
