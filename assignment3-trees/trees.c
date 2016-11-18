@@ -1,3 +1,11 @@
+/*
+trees.c, code implementing various tree functions
+Author: David J. Bourke, Student Number: 12304135
+Date started:   18th of November 2016
+Date submitted:
+Depends on: quicksort.h
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "quicksort.h"
@@ -107,12 +115,17 @@ Tree_Node* array_to_BST (char* array, int array_length) {
 // Returns the number of levels in the tree
 // (We can use this to verify that the tree is balanced)
 int tree_count_levels (Tree_Node* root) {
-    if (root == NULL) {
+    int levels_left = 0, levels_right = 0;
+
+    if (root == NULL) { // Null nodes not counted as levels
         return 0;
     }
-    int levels_left = 0, levels_right = 0;
+
+    // Count the levels in each child subtree
     levels_left = tree_count_levels(root->left);
     levels_right = tree_count_levels(root->right);
+
+    // Return the maximum number of levels between the two child subtrees
     if (levels_left > levels_right) {
         return levels_left + 1;
     } else {
