@@ -91,16 +91,9 @@ Tree_Node* tree_create (char data) {
 // Creates a balanced BST assuming sorted_array is really sorted,
 // if sorted_array is not sorted, then will create a balanced tree (not a BST)
 Tree_Node* array_to_balanced_tree (char* array, int start, int end) {
-    // Function works as follows:
+
     // The middle element of the input array (bounded by start and end)
     // is selected. This middle element becomes the root value of the node to be returned by the function.
-    // The function calls itself recursively using the bottom half of the array (start -> mid - 1) as input
-    // and the node returned by this recursive function call becomes the left child of the root
-    // The function calls itself recursively using the top half of the array (mid + 1 -> end) as input
-    // and the node returned by this recursive function call becomes the right child of the root
-    // When the left and right children have been assigned, the function finishes by returning the root node.
-    // The left and right chid, being assigned using the same process, are roots of sub-trees within the super-tree
-
     Tree_Node* root;
     int mid;
 
@@ -113,12 +106,15 @@ Tree_Node* array_to_balanced_tree (char* array, int start, int end) {
     root = (Tree_Node*)malloc(sizeof(Tree_Node));
     root->data = sorted_array[mid];
 
-    // repeat the process for the left and right children, using the
-    // lower partition of the array as input for the left child tree, and the
-    // upper partition of the array as input for the right child tree
+    // The function calls itself recursively using the bottom half of the array (start -> mid - 1) as input
+    // and the node returned by this recursive function call becomes the left child of the root
     root->left = array_to_balanced_tree(array, start, mid - 1);
+    // The function calls itself recursively using the top half of the array (mid + 1 -> end) as input
+    // and the node returned by this recursive function call becomes the right child of the root
     root->right = array_to_balanced_tree(array, mid + 1, end);
 
+    // When the left and right children have been assigned, the function finishes by returning the root node.
+    // The left and right chid, being assigned using the same process, are roots of balanced sub-trees within the super-tree
     return root;
 }
 
