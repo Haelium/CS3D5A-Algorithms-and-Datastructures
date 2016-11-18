@@ -88,28 +88,43 @@ Tree_Node* tree_create (char data) {
     return root;
 }
 
-Tree_Node* sorted_array_to_BST (char* sorted_array, int start, int end) {
+// Creates a balanced BST assuming sorted_array is really sorted,
+// if sorted_array is not sorted, then will create a balanced tree (not a BST)
+Tree_Node* array_to_balanced_tree (char* array, int start, int end) {
+    // Function works as follows:
+    // The middle element of the input array (bounded by start and end)
+    // is selected. This middle element becomes the root value of the node to be returned by the function.
+    // The function calls itself recursively using the bottom half of the array (start -> mid - 1) as input
+    // and the node returned by this recursive function call becomes the left child of the root
+    // The function calls itself recursively using the top half of the array (mid + 1 -> end) as input
+    // and the node returned by this recursive function call becomes the right child of the root
+    // When the left and right children have been assigned, the function finishes by returning the root node.
+    // The left and right chid, being assigned using the same process, are roots of sub-trees within the super-tree
+
     Tree_Node* root;
     int mid;
 
-    if (start > end) {
+    if (start > end) {  // arrays cannot end before they start
         return NULL;
     }
 
+    // The midpoint (between start and end) will be the root of this (sub)tree
     mid = (start + end) / 2;
-
     root = (Tree_Node*)malloc(sizeof(Tree_Node));
     root->data = sorted_array[mid];
 
-    root->left = sorted_array_to_BST(sorted_array, start, mid - 1);
-    root->right = sorted_array_to_BST(sorted_array, mid + 1, end);
+    // repeat the process for the left and right children, using the
+    // lower partition of the array as input for the left child tree, and the
+    // upper partition of the array as input for the right child tree
+    root->left = array_to_balanced_tree(array, start, mid - 1);
+    root->right = array_to_balanced_tree(array, mid + 1, end);
 
     return root;
 }
 
 Tree_Node* array_to_BST (char* array, int array_length) {
     quicksort(array, array_length);
-    return sorted_array_to_BST(array, 0, array_length - 1);
+    return array_to_balanced_tree(array, 0, array_length - 1);
 }
 
 // Returns the number of levels in the tree
