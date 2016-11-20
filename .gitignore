@@ -2,3 +2,7 @@
 hash
 sort
 trees
+
+# results that are probably left in folder
+assignment2-sorting/*.csv
+assignment2-sorting/*.png
