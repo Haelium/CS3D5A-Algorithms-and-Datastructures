@@ -10,6 +10,7 @@ Depends on: quicksort.h
 #include <stdio.h>
 #include "quicksort.h"
 
+// Each node contains a char as data, and pointers to two child nodes
 typedef struct Tree_Node Tree_Node;
 struct Tree_Node {
     char data;
@@ -119,7 +120,7 @@ Tree_Node* sorted_array_to_BBST (char* array, int start, int end) {
 }
 
 Tree_Node* array_to_BBST (char* array, int array_length) {
-    quicksort(array, array_length);
+    quicksort(array, array_length); // Sort the array using quicksort
     return sorted_array_to_BBST(array, 0, array_length - 1);
 }
 
@@ -132,11 +133,11 @@ int tree_count_levels (Tree_Node* root) {
         return 0;
     }
 
-    // Count the levels in each child subtree
+    // Count the levels in each child subtree (recursively)
     levels_left = tree_count_levels(root->left);
     levels_right = tree_count_levels(root->right);
 
-    // Return the maximum number of levels between the two child subtrees
+    // Return the larger number of levels between the two child subtrees and add one to count the root
     if (levels_left > levels_right) {
         return levels_left + 1;
     } else {
