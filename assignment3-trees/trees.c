@@ -32,16 +32,16 @@ int main (void) {
     // For an unbalanced tree containing 7 nodes, tree_count_levels should return n >= 3
     printf("Levels in unbalanced tree: %d\n", tree_count_levels(root));
 
-    tree_delete(root);
+    tree_delete(root);  // deletes all nodes, but not the root pointer
 
 
     // Testing array_to_BBST
     printf("Testing balanced tree functions...\n");
-    root = array_to_BBST(test_array, 7);
+    root = array_to_BBST(test_array, 7);    // resets root pointer to newly allocated memory
     tree_print_sorted(root);
     printf("\n");
     // for a balanced tree containing 7 nodes, tree_count_levels should return 3
     printf("Levels in balanced tree: %d\n", tree_count_levels(root));
 
-    tree_delete(root);
+    tree_delete(root);  // deletes all nodes, but not the root pointer
 }
