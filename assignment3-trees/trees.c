@@ -14,8 +14,8 @@ int main (void) {
         'X', 'Z', 'C', 'B', 'A', 'Y', 'F'
     };
 
+    // Testing tree_create, tree_insert, and tree_print_sorted
     Tree_Node* root = tree_create('E');
-    Tree_Node* search_result_node;
 
     tree_insert(root, 'A');
     tree_insert(root, 'B');
@@ -24,20 +24,22 @@ int main (void) {
     tree_insert(root, 'E');
     tree_insert(root, 'F');
     tree_insert(root, 'G');
-    printf("Levels in unbalanced tree: %d\n", tree_count_levels(root));
 
-    search_result_node = tree_search(root, 'E');
-    printf("This should be E: %c\n", search_result_node->data);
-
+    printf("This should be E: %c\n", tree_search(root, 'E')->data);
     tree_print_sorted(root);
     printf("\n");
+    // For an unbalanced tree containing 7 nodes, tree_count_levels should return n >= 3
+    printf("Levels in unbalanced tree: %d\n", tree_count_levels(root));
 
     tree_delete(root);
 
+
+    // Testing array_to_BBST
     printf("Testing balanced tree functions...\n");
     root = array_to_BBST(test_array, 7);
     tree_print_sorted(root);
     printf("\n");
+    // for a balanced tree containing 7 nodes, tree_count_levels should return 3
     printf("Levels in balanced tree: %d\n", tree_count_levels(root));
 
     tree_delete(root);
