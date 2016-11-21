@@ -1,5 +1,5 @@
 /*
-trees.c, code implementing various tree functions
+trees.h, code implementing various tree functions
 Author: David J. Bourke, Student Number: 12304135
 Date started:   18th of November 2016
 Date submitted:
@@ -66,9 +66,10 @@ void tree_print_sorted (Tree_Node* root) {
     if (root == NULL) {
         return;
     }
-    tree_print_sorted(root->left);
-    printf("%c (%d), ", root->data, root->data);
-    tree_print_sorted(root->right);
+    // Print in left, self, right order (LSR)
+    tree_print_sorted(root->left);  // recursive call on left child
+    printf("%c (%d), ", root->data, root->data);    // Print character with ASCII code
+    tree_print_sorted(root->right); // recursive call on right child
 }
 
 void tree_delete (Tree_Node* root) {

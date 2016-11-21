@@ -7,9 +7,10 @@ Depends on: tree_functions.h, quicksort.h
 */
 
 #include <stdio.h>
-#include "tree_functions.h"
+#include "tree_functions.h" // array_to_BBST, tree*, Tree_Node definition
 
 int main (void) {
+    // Test array used to test array_to_BBST
     char test_array[7] = {
         'X', 'Z', 'C', 'B', 'A', 'Y', 'F'
     };
