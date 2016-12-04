@@ -6,5 +6,6 @@ int main (void) {
 
     breadth_first_search('A', 'B');
     breadth_first_search('A', 'Z');
+    depth_first_search('A', 'B');
     return 0;
 }

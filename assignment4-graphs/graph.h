@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "queue.h"
+#include "stack.h"
 
 #define NUM_OF_NODES 12
 
@@ -63,6 +64,35 @@ int get_link_cost (char n1, char n2) {
     return graph[ascii2index(n1)][ascii2index(n2)];
 }
 
+bool depth_first_search (char start_vertex, char end_vertex) {
+    printf("Depth first search\n");
+    char current_vertex;
+    Char_Stack* unvisited = initialise_stack();
+    bool visited[NUM_OF_NODES];
+    for (int x = 0; x < NUM_OF_NODES; x++) {
+        visited[x] = false;
+    }
+    push(unvisited, start_vertex);
+
+    while (empty_stack(unvisited) == false) {
+        current_vertex = pop(unvisited);
+        printf("%c ", current_vertex);
+        if (current_vertex == end_vertex) {
+            printf("Vertex found\n");
+            return true;
+        }
+        if (visited[ascii2index(current_vertex)] == false) {
+            visited[ascii2index(current_vertex)] = true;
+            for (int x = 0; x < NUM_OF_NODES; x++) {
+                if (graph[ascii2index(current_vertex)][x] > 0) {
+                    push(unvisited, index2ascii(x));
+                }
+            }
+        }
+    }
+    return false;
+}
+
 bool breadth_first_search (char start_vertex, char end_vertex) {
     printf("Breadth first search\n");
     char current_vertex;
@@ -76,7 +106,7 @@ bool breadth_first_search (char start_vertex, char end_vertex) {
     while (!empty_queue(unvisited)) {
         current_vertex = dequeue(unvisited);
         visited[ascii2index(current_vertex)] = true;
-        printf("%c - ", current_vertex);
+        printf("%c ", current_vertex);
         if (current_vertex == end_vertex) {
             printf("Node found\n");
             return true;
@@ -88,5 +118,21 @@ bool breadth_first_search (char start_vertex, char end_vertex) {
         }
     }
     printf("Node not found\n");
+    return false;
+}
+
+bool dijkstra_search (char start_vertex, char end_vertex) {
+    printf("Dijkstra search\n");
+    Priority_Queue* unvisited = initialise_priority_queue();
+    // array of distances from start_vertex to each vertex in graph (use ascii2index)
+    int dist[NUM_OF_NODES];
+    // Start with the distance to each vertex as infinity (or some large number)
+    for (int x = 0; x < NUM_OF_NODES; x++) {
+        dist[x] = 99999;
+        enqueue(unvisited)
+    }
+    dist[ascii2index(start_vertex)] = 0;    // Distance from v -> v = 0
+
+
     return false;
 }
