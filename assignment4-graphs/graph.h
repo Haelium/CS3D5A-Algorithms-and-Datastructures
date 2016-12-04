@@ -75,6 +75,7 @@ bool breadth_first_search (char start_vertex, char end_vertex) {
 
     while (!empty_queue(unvisited)) {
         current_vertex = dequeue(unvisited);
+        visited[ascii2index(current_vertex)] = true;
         printf("%c - ", current_vertex);
         if (current_vertex == end_vertex) {
             printf("Node found\n");
@@ -86,6 +87,6 @@ bool breadth_first_search (char start_vertex, char end_vertex) {
             }
         }
     }
-    printf("\n");
+    printf("Node not found\n");
     return false;
 }
