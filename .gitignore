@@ -2,6 +2,7 @@
 hash
 sort
 trees
+graph
 
 # results that are probably left in folder
 assignment2-sorting/*.csv
