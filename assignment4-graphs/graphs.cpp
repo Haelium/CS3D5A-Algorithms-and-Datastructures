@@ -5,6 +5,7 @@
 // TODO: Replace C with nicer C++ functions
 
 #include <stack>
+#include <queue>
 // remove and replace
 #include <cstdio>
 #include <cstdlib>
@@ -78,8 +79,8 @@ inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
     for (int x = 0; x < NUM_OF_NODES; x++) {
         visited[x] = false;
     }
+    
     unvisited.push(start_vertex);
-
     while (!unvisited.empty()) {
         current_vertex = unvisited.top();
         unvisited.pop();    // std::stack::pop does not return top
@@ -101,9 +102,89 @@ inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
     return false;
 }
 
+class Vertex {
+public:
+    char vertex;
+    int cost_from_source;
+};
+
+class GreaterCost {
+public:
+    bool operator ()(Vertex const & vertex_1, Vertex const & vertex_2) {
+        return (vertex_1.cost_from_source > vertex_2.cost_from_source);
+    }
+};
+
 inline bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
+    char current_v;
+    int alt;
+    // Todo: explain what's going on here with this C++ STL jibberish'
+    priority_queue<Vertex, vector<Vertex>, GreaterCost> unvisited;
+    int dist_to_vertex[NUM_OF_NODES];       // distance from source to vertex
+    char prev_optimal_vertex[NUM_OF_NODES]; // previous vertex in optimal path from source
+    Vertex current_vertex;
+
+    for (char v = 'A'; v < 'A' + NUM_OF_NODES; v++) {
+        if (v != start_vertex) {    // don't add source vertex here
+            dist_to_vertex[ascii2index(v)] = 99999;
+            prev_optimal_vertex[ascii2index(v)] = 0;
+            current_vertex.vertex = v;
+            current_vertex.cost_from_source = 99999;
+            //unvisited.push(current_vertex);
+        }
+    }/*
+ 5      for each vertex v in Graph:             // Initialization
+ 6          dist[v] ← INFINITY                  // Unknown distance from source to v
+ 7          prev[v] ← UNDEFINED                 // Previous node in optimal path from source
+ 8          add v to Q                          // All nodes initially in Q (unvisited nodes)
+ 9
+10      dist[source] ← 0                        // Distance from source to source
+11      */
+    dist_to_vertex[ascii2index(start_vertex)] = 0;
+    current_vertex.vertex = start_vertex;
+    current_vertex.cost_from_source = 0;
+    unvisited.push(current_vertex);
+//      while Q is not empty:
+    while (!unvisited.empty()) {
+        //printf("LOL");
+//13          u ← vertex in Q with min dist[u]    // Source node will be selected first
+//14          remove u from Q 
+        current_v = unvisited.top().vertex;
+        unvisited.pop();
+        //printf("%c ", current_v);
+//15          
+//16          for each neighbor v of u:           // where v is still in Q.
+        for (char neighbour_v = 'A'; neighbour_v < 'A' + NUM_OF_NODES; neighbour_v++) {
+//17              alt ← dist[u] + length(u, v)
+            if (graph[ascii2index(current_v)][ascii2index(neighbour_v)] >= 0) {
+                alt = dist_to_vertex[ascii2index(current_v)] + graph[ascii2index(current_v)][ascii2index(neighbour_v)];
+//18              if alt < dist[v]:               // A shorter path to v has been found
+//19                  dist[v] ← alt 
+//20                  prev[v] ← u 
+                if (alt < dist_to_vertex[ascii2index(neighbour_v)]) {
+                    dist_to_vertex[ascii2index(neighbour_v)] = alt;
+                    prev_optimal_vertex[ascii2index(neighbour_v)] = current_v;
+
+                    current_vertex.cost_from_source = dist_to_vertex[ascii2index(neighbour_v)];
+                    current_vertex.vertex = neighbour_v;
+                    unvisited.push(current_vertex);
+                }
+            }
+        }
+//21
+    }
+//22      return dist[], prev[]
+
+    char vert = end_vertex; 
+    while (vert != start_vertex) {
+        printf("%c ", vert);
+        vert = prev_optimal_vertex[ascii2index(vert)];
+    }
+    printf("%c\n", vert);
+
     return false;
 }
+
 
 int main (void) {
     Graph test_graph;   // declaring a graph object
@@ -125,5 +206,7 @@ int main (void) {
         test_graph.add_link_bi('J', 'L', 5);
     }
     test_graph.depth_first_search('A', 'I');
+    test_graph.dijkstra_search('A', 'I');
+    
     return 0;
 }
