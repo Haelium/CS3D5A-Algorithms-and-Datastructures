@@ -28,16 +28,8 @@ class Graph {
 public:
     Graph (void);
     void add_link_bi (char vertex_1, char vertex_2, int cost);
-    int get_link_cost (char n1, char n2);
     bool depth_first_search (char start_vertex, char end_vertex);
     bool dijkstra_search (char start_vertex, char end_vertex);
-    void print(void) {
-        for (int x = 0; x < NUM_OF_NODES; x++) {
-            for (int y = 0; y < NUM_OF_NODES; y++) {
-                printf("%d ", graph[x][y]);
-            }
-        }
-    }
 private:
     int graph[NUM_OF_NODES][NUM_OF_NODES];
 };
@@ -60,15 +52,6 @@ inline void Graph::add_link_bi (char vertex_1, char vertex_2, int cost) {
     // TODO: Exception handling
     graph[ascii2index(vertex_1)][ascii2index(vertex_2)] = cost;
     graph[ascii2index(vertex_2)][ascii2index(vertex_1)] = cost;
-}
-
-inline int Graph::get_link_cost (char n1, char n2) {
-    // check if n1 or n2 are out of range (ascii values from 'A' to 'G')
-    assert(n1 >= 'A' && n1 <= 'L');
-    assert(n2 >= 'A' && n2 <= 'L');
-
-    // return result from graph matrix
-    return graph[ascii2index(n1)][ascii2index(n2)];
 }
 
 inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
@@ -102,12 +85,15 @@ inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
     return false;
 }
 
+// Container class, associates a vertex label with a cost from the source in dijktras search
+// Used as an element within a priority queue for dijkstras search
 class Vertex {
 public:
     char vertex;
     int cost_from_source;
 };
 
+// Comparison class, used to define how the priority queue in dijkstra's search is ordered
 class GreaterCost {
 public:
     bool operator ()(Vertex const & vertex_1, Vertex const & vertex_2) {
@@ -116,73 +102,65 @@ public:
 };
 
 inline bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
+    // In this implementeation, start_vertex is the "source"
     char current_v;
     int alt;
-    // Todo: explain what's going on here with this C++ STL jibberish'
+    bool optimal_route_found = false;  // default
+    // Priority queue, priority is given to Vertex objects whose cost_from_source is lowest
     priority_queue<Vertex, vector<Vertex>, GreaterCost> unvisited;
-    int dist_to_vertex[NUM_OF_NODES];       // distance from source to vertex
+    int dist_to_vertex[NUM_OF_NODES];       // optimal known distance from source to vertex
     char prev_optimal_vertex[NUM_OF_NODES]; // previous vertex in optimal path from source
-    Vertex current_vertex;
+    Vertex temp_vertex;
 
     for (char v = 'A'; v < 'A' + NUM_OF_NODES; v++) {
-        if (v != start_vertex) {    // don't add source vertex here
-            dist_to_vertex[ascii2index(v)] = 99999;
-            prev_optimal_vertex[ascii2index(v)] = 0;
-            current_vertex.vertex = v;
-            current_vertex.cost_from_source = 99999;
-            //unvisited.push(current_vertex);
-        }
-    }/*
- 5      for each vertex v in Graph:             // Initialization
- 6          dist[v] ← INFINITY                  // Unknown distance from source to v
- 7          prev[v] ← UNDEFINED                 // Previous node in optimal path from source
- 8          add v to Q                          // All nodes initially in Q (unvisited nodes)
- 9
-10      dist[source] ← 0                        // Distance from source to source
-11      */
+        dist_to_vertex[ascii2index(v)] = 99999;     // Each vertex begins with infinite cost to source
+        prev_optimal_vertex[ascii2index(v)] = 0;    // 0 denotes no route to source from v
+    }
     dist_to_vertex[ascii2index(start_vertex)] = 0;
-    current_vertex.vertex = start_vertex;
-    current_vertex.cost_from_source = 0;
-    unvisited.push(current_vertex);
-//      while Q is not empty:
+    temp_vertex.vertex = start_vertex;
+    temp_vertex.cost_from_source = 0;
+    unvisited.push(temp_vertex);
+
+    // While there are nodes which have not been tried, keep looping through the queue
     while (!unvisited.empty()) {
-        //printf("LOL");
-//13          u ← vertex in Q with min dist[u]    // Source node will be selected first
-//14          remove u from Q 
+        // remove the first vertex from the queue and calculate the optimal routes to the source (start_vertex) from that vertex
         current_v = unvisited.top().vertex;
         unvisited.pop();
-        //printf("%c ", current_v);
-//15          
-//16          for each neighbor v of u:           // where v is still in Q.
-        for (char neighbour_v = 'A'; neighbour_v < 'A' + NUM_OF_NODES; neighbour_v++) {
-//17              alt ← dist[u] + length(u, v)
-            if (graph[ascii2index(current_v)][ascii2index(neighbour_v)] >= 0) {
-                alt = dist_to_vertex[ascii2index(current_v)] + graph[ascii2index(current_v)][ascii2index(neighbour_v)];
-//18              if alt < dist[v]:               // A shorter path to v has been found
-//19                  dist[v] ← alt 
-//20                  prev[v] ← u 
-                if (alt < dist_to_vertex[ascii2index(neighbour_v)]) {
-                    dist_to_vertex[ascii2index(neighbour_v)] = alt;
-                    prev_optimal_vertex[ascii2index(neighbour_v)] = current_v;
 
-                    current_vertex.cost_from_source = dist_to_vertex[ascii2index(neighbour_v)];
-                    current_vertex.vertex = neighbour_v;
-                    unvisited.push(current_vertex);
+        // If we have reached the target (start_vertex) then a route exists from start_vertex to end_vertex
+        if (current_v == end_vertex) {
+                optimal_route_found = true;
+        }
+        // Loop through every neighbour, calculate the cost of taking that route and compare it to the current optimal route
+        for (char neighbour_v = 'A'; neighbour_v < 'A' + NUM_OF_NODES; neighbour_v++) {
+            if (graph[ascii2index(current_v)][ascii2index(neighbour_v)] >= 0) { // Check that neighbour exists (-1 for no link, 0 for self)
+                // alt is the cost of the alternate route
+                alt = dist_to_vertex[ascii2index(current_v)] + graph[ascii2index(current_v)][ascii2index(neighbour_v)];
+                // If the alternate route is cheaper, this becomes the optimal route from the current vertex (current_v)
+                if (alt < dist_to_vertex[ascii2index(neighbour_v)]) {
+                    dist_to_vertex[ascii2index(neighbour_v)] = alt;             // Update the cost of optimal route for neighbour_v
+                    prev_optimal_vertex[ascii2index(neighbour_v)] = current_v;  // Update the previous node in the optimal route to neighbour_v
+
+                    // push the newly considered neighbour to the queue with its dist_to_vertex
+                    temp_vertex.cost_from_source = dist_to_vertex[ascii2index(neighbour_v)];
+                    temp_vertex.vertex = neighbour_v;
+                    unvisited.push(temp_vertex);
                 }
             }
         }
-//21
     }
-//22      return dist[], prev[]
 
-    char vert = end_vertex; 
-    while (vert != start_vertex) {
-        printf("%c ", vert);
-        vert = prev_optimal_vertex[ascii2index(vert)];
+    // Print out the optimal route if it exists
+    if (optimal_route_found) {
+        char vert = end_vertex; 
+        while (vert != start_vertex) {
+            printf("%c ", vert);
+            vert = prev_optimal_vertex[ascii2index(vert)];
+        }
+        printf("%c\n", vert);
     }
-    printf("%c\n", vert);
-
-    return false;
+    // Return the result of the search (true / false)
+    return optimal_route_found;
 }
 
 
