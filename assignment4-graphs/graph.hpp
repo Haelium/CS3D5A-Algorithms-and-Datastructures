@@ -83,7 +83,7 @@ inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
         visited[x] = false;
     }
     
-    // Each node is pushed to the stack as it is examined, so we can look back in the case of a "dead end"
+    // Each node is pushed to the stack before it is examined
     unvisited.push(start_vertex);
     while (!unvisited.empty()) {
         // Top of stack is examined first as it is removed from the stack
