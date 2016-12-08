@@ -57,7 +57,7 @@ inline void Graph::add_link (char vertex_1, char vertex_2, int cost) {
 }
 
 inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
-    printf("Depth first search\n");
+    printf("DFS from '%c' ", start_vertex);
     char current_vertex;
     std::stack<char> unvisited;
     bool visited[NUM_OF_NODES];
@@ -72,7 +72,7 @@ inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
 
         printf("%c ", current_vertex);
         if (current_vertex == end_vertex) {
-            printf("Vertex found\n");
+            printf("target found - HALT\n");
             return true;
         }
         if (visited[ascii2index(current_vertex)] == false) {
@@ -84,6 +84,7 @@ inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
             }
         }
     }
+    printf("target not found - HALT\n");
     return false;
 }
 
@@ -116,7 +117,7 @@ inline bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
     VertexQueueNode vertex_queue_node;
 
     for (char v = 'A'; v < 'A' + NUM_OF_NODES; v++) {
-        dist_to_vertex[ascii2index(v)] = 99999;     // Each vertex begins with infinite cost to source
+        dist_to_vertex[ascii2index(v)] = 99999;     // Each vertex begins with infinite cost from source
         prev_optimal_vertex[ascii2index(v)] = 0;    // 0 denotes no route to source from v
     }
     dist_to_vertex[ascii2index(start_vertex)] = 0;
@@ -154,16 +155,31 @@ inline bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
         }   // endfor (loop through every neighbour of current_v)
 
     }   // endwhile (priority queue not empty)
+    // Dijkstras algorithm has been calculated when the previous loop ends (if a route exists)
+
+    // This section just prints the route (if a route exists) and returns a bool to state if a route is found (true / false)
+    printf("Dijkstra path from `%c' length %d\n", start_vertex, dist_to_vertex[ascii2index(start_vertex)]);
+    // Since dijkstra's search is calculated by storing the best parent, we use a stack to print in start -> end order
+    stack<char> route;
 
     // Print out the optimal route if it exists
     if (optimal_route_found) {
         char vert = end_vertex; 
         while (vert != start_vertex) {
-            printf("%c: %d\n", vert, dist_to_vertex[ascii2index(vert)]);
+            route.push(vert);
             vert = prev_optimal_vertex[ascii2index(vert)];
         }
-        printf("%c: %d\n", vert, dist_to_vertex[ascii2index(vert)]);
+        
+        while (!route.empty()) {
+            vert = route.top();
+            route.pop();
+            printf("%c length %d, parent %c\n", vert, dist_to_vertex[ascii2index(vert)], prev_optimal_vertex[ascii2index(vert)]);
+        }
+        printf("target found - HALT\n");
+    } else {
+        printf("target not found - HALT\n");
     }
+
     // Return the result of the search (true / false)
     return optimal_route_found;
 }
@@ -188,8 +204,10 @@ int main (void) {
         test_graph.add_link('I', 'K', 11);
         test_graph.add_link('J', 'L', 5);
     }
-    test_graph.depth_first_search('A', 'I');
-    test_graph.dijkstra_search('A', 'I');
+    test_graph.depth_first_search('A', 'X');
+    test_graph.depth_first_search('K', 'B');
+    test_graph.dijkstra_search('A', 'X');
+    test_graph.dijkstra_search('A', 'J');
     
     return 0;
 }
