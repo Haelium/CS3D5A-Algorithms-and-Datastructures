@@ -6,10 +6,6 @@ Date submitted: 8th of December 2016
 Used in: graph.cpp
 */
 
-// TODO: Exception handling
-// TODO: comment each function
-// TODO: improve variable names
-
 #include <stack>    // stack (used for depth first search)
 #include <queue>    // priority_queue, queue (used for dijkstra_search)
 
@@ -34,9 +30,13 @@ static inline char index2ascii (int n) {
 // (Class could be modified to work with n vertices by using a dynamic array with some other changes)
 class Graph {
 public:
+    // Default constructor initialises all vertices to be disconnected
     Graph (void);
+    // Adds a link from vetex_1 to vertex_2 with a cost
     void add_link (char vertex_1, char vertex_2, int cost);
+    // Finds a potentially sub-optimal path from start_vertex to end_vertex using depth-first search in alphabetical order
     bool depth_first_search (char start_vertex, char end_vertex);
+    // Finds an optimal path from start_vertex to end_vertex using dijkstra's least-cost path algorithm
     bool dijkstra_search (char start_vertex, char end_vertex);
 private:
     // Graph is stored in a adjacency matrix
@@ -172,7 +172,7 @@ inline bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
         // Loop through every neighbour, calculate the cost of taking that route and compare it to the current known optimal route
         for (char neighbour_v = 'A'; neighbour_v < 'A' + NUM_OF_NODES; neighbour_v++) {
             if (graph[ascii2index(current_v)][ascii2index(neighbour_v)] >= 0) { // Check that neighbour exists (-1 for no link, 0 for self)
-                // alt is the cost of the alternate route
+                // alternate route cost = cost to current_vertex + link from current vertex to neighbour (alt = dist(u) + cost(u, v))
                 alt_route_cost = dist_to_vertex[ascii2index(current_v)] + graph[ascii2index(current_v)][ascii2index(neighbour_v)];
                 // If the alternate route is cheaper, this becomes the optimal route from the current vertex (current_v)
                 if (alt_route_cost < dist_to_vertex[ascii2index(neighbour_v)]) {
