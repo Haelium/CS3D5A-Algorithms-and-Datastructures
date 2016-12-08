@@ -16,7 +16,7 @@ Used in: graph.cpp
 #include <cstdio>   // printf
 #include <cassert>  // assert
 
-using namespace std;
+using namespace std;    // <stack> and <queue> are within namespace std
 
 #define NUM_OF_NODES 12
 
