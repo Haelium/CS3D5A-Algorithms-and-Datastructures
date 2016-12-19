@@ -43,7 +43,7 @@ private:
     int graph[NUM_OF_NODES][NUM_OF_NODES];
 };
 
-inline Graph::Graph (void) {
+Graph::Graph (void) {
     // set all edge costs to -1, denoting that no edge exists
     for (int x = 0; x < NUM_OF_NODES; x++) {
         for (int y = 0; y < NUM_OF_NODES; y++) {
