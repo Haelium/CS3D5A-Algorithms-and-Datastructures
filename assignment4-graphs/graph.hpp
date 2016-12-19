@@ -34,7 +34,7 @@ public:
     Graph (void);
     // Adds a link from vetex_1 to vertex_2 with a cost
     void add_link (char vertex_1, char vertex_2, int cost);
-    // Finds a potentially sub-optimal path from start_vertex to end_vertex using depth-first search in alphabetical order
+    // Finds a potentially sub-optimal path from start_vertex to end_vertex using depth-first search in descending alphabetical order
     bool depth_first_search (char start_vertex, char end_vertex);
     // Finds an optimal path from start_vertex to end_vertex using dijkstra's least-cost path algorithm
     bool dijkstra_search (char start_vertex, char end_vertex);
@@ -57,7 +57,7 @@ inline Graph::Graph (void) {
     }
 }
 
-inline void Graph::add_link (char vertex_1, char vertex_2, int cost) {
+void Graph::add_link (char vertex_1, char vertex_2, int cost) {
     // Check that vertices are within valid range of values
     assert(vertex_1 >= 'A' && vertex_1 <= 'A' + NUM_OF_NODES);
     assert(vertex_2 >= 'A' && vertex_2 <= 'A' + NUM_OF_NODES);
@@ -66,7 +66,7 @@ inline void Graph::add_link (char vertex_1, char vertex_2, int cost) {
     graph[ascii2index(vertex_2)][ascii2index(vertex_1)] = cost;
 }
 
-inline bool Graph::depth_first_search (char start_vertex, char end_vertex) {
+bool Graph::depth_first_search (char start_vertex, char end_vertex) {
     // Check that inputs are valid
     if (start_vertex < 'A' || start_vertex > 'A' + NUM_OF_NODES || end_vertex < 'A' || end_vertex > 'A' + NUM_OF_NODES) {
         printf("Error: depth_first_search: Invalid input data, valid vertices are between 'A' and 'L'\n");
@@ -126,7 +126,7 @@ public:
     }
 };
 
-inline bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
+bool Graph::dijkstra_search(char start_vertex, char end_vertex) {
     // Check that inputs are valid
     if (start_vertex < 'A' || start_vertex > 'A' + NUM_OF_NODES || end_vertex < 'A' || end_vertex > 'A' + NUM_OF_NODES) {
         printf("Error: dijkstra_search: Invalid input data, valid vertices are between 'A' and 'L'\n");
